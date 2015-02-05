@@ -1,0 +1,43 @@
+<tool id="filter_transcriptome_bam" name="Filter Transcriptome BAM" version="1.0.0">
+    <description>identify fusion transcripts</description>
+    <requirements>
+        <requirement type="package" version="0.0.1">ubu</requirement>
+        <requirement type="package" version="0.1.18">samtools</requirement>
+    </requirements>
+    <command interpreter="command"> /bin/bash $shscript </command>
+    <inputs>
+        <param name="input_bam" type="data" format="bam" label="Input BAM"/>
+		<param name="indels_only" type="boolean" checked="false" label="Indels Only" help="Discard reads not containing indels"/>
+		<param name="strip_indels" type="boolean" checked="false" label="Strip Indels" help="Discard read pairs containing indels from output"/>
+		<param name="mapq" type="integer" optional="true" label="Min Map Quality" help="If specified, discard clusters with mapping quality less than the specified value"/>
+		<param name="max_insert" type="integer" optional="true" label="Max Insert" help="If specified, discard clusters greater than specified insert length"/>
+    </inputs>
+    <outputs>
+        <data format="bam" name="output_bam" label="Filtered Bam"/>
+    </outputs>
+    <configfiles>
+        <configfile name="shscript">
+#!/bin/bash
+
+UBU_PATH=\$HOME/rnaseq/ubu_build
+
+java -Xmx512M -jar \$UBU_PATH/ubu-1.2-jar-with-dependencies.jar \
+    sam-filter \
+#if $indels_only:
+    --indels-only \
+#end if
+#if $strip_indels:
+    --strip-indels \
+#end if
+#if str($max_insert) != '':
+    --max-insert ${max_insert} \
+#end if
+#if str($mapq) != '':  
+    --mapq ${mapq} \
+#end if
+    --in ${input_bam} \
+    --out ${output_bam}
+    
+        </configfile>
+    </configfiles>
+</tool>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="ubu" version="0.6.0">
+        <install version="1.0">
+            <actions>
+                <action type="download_by_url">https://github.com/mozack/ubu/archive/master.zip</action>
+                <action type="shell_command">cd ubu-master &amp;&amp; mvn package</action>
+                <action type="move_directory_files">
+                    <source_directory>target</source_directory>
+                    <destination_directory>$INSTALL_DIR</destination_directory>
+                </action>
+                <action type="move_directory_files">
+                    <source_directory>src/perl</source_directory>
+                    <destination_directory>$INSTALL_DIR</destination_directory>
+                </action>
+                <action type="set_environment">
+                    <environment_variable name="UBU_PATH" action="set_to">$INSTALL_DIR</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>
+UBU Tool build
+        </readme>
+    </package>
+
+    <package name="samtools" version="0.1.18">
+        <install version="1.0">
+            <actions>
+                <action type="download_by_url">http://sourceforge.net/projects/samtools/files/samtools/0.1.18/samtools-0.1.18.tar.bz2</action>
+                <action type="shell_command">sed -i.bak -e 's/-lcurses/-lncurses/g' Makefile</action>
+                <action type="shell_command">make</action>
+                <action type="move_file">
+                    <source>samtools</source>
+                    <destination>$INSTALL_DIR/bin</destination>
+                </action>
+                <action type="move_file">
+                    <source>misc/maq2sam-long</source>
+                    <destination>$INSTALL_DIR/bin</destination>
+                </action>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>
+Compiling SAMtools requires the ncurses and zlib development libraries.
+        </readme>
+    </package>
+
+</tool_dependency>

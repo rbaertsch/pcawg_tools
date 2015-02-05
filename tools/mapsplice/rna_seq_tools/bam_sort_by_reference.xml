@@ -1,0 +1,14 @@
+<tool id="sort_bam_by_reference" name="Sort BAM by reference" version="1.0.0">
+    <description>identify fusion transcripts</description>
+    <requirements>
+        <requirement type="package" version="0.0.1">ubu</requirement>
+        <requirement type="package" version="0.1.18">samtools</requirement>
+    </requirements>
+    <command interpreter="python">sort_bam_by_reference_and_name.py --input ${input_bam} --input-index ${input_bam.metadata.bam_index} --output ${output_bam} --temp-dir .</command>
+    <inputs>
+        <param name="input_bam" type="data" format="bam" label="Input BAM"/>
+    </inputs>
+    <outputs>
+        <data format="bam" name="output_bam" label="Chrome Sorted Bam"/>
+    </outputs>
+</tool>

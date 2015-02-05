@@ -1,0 +1,32 @@
+<tool id="transcriptome_bam" name="Transcriptome BAM" version="1.0.0">
+    <description>identify fusion transcripts</description>
+    <requirements>
+        <requirement type="package" version="0.0.1">ubu</requirement>
+        <requirement type="package" version="0.1.18">samtools</requirement>
+    </requirements>
+    <command interpreter="command"> /bin/bash $shscript </command>
+    <inputs>
+        <param name="input_bam" type="data" format="bam" label="Input BAM"/>
+        <param name="transcript_bed" type="data" format="bed" label="Transcriptome BED definition"/>
+        <param name="transcript_fasta" type="data" format="fasta" labe="Transcript FASTA"/>
+    </inputs>
+    <outputs>
+        <data format="bam" name="transcript_bam" label="Transcriptome Bam"/>
+    </outputs>
+    <configfiles>
+        <configfile name="shscript">
+#!/bin/bash
+
+UBU_PATH=\$HOME/rnaseq/ubu_build
+
+java -Xms3G -Xmx3G -jar \$UBU_PATH/ubu-1.2-jar-with-dependencies.jar \
+    sam-xlate \
+    --bed ${transcript_bed} \
+    --in ${input_bam} \
+    --out ${transcript_bam} \
+    --order ${transcript_fasta} \
+    --xgtags --reverse
+    
+        </configfile>
+    </configfiles>
+</tool>
